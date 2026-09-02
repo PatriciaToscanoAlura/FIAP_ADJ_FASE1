@@ -221,7 +221,6 @@ paths:
                                     value:
                                         expiraEm: 3600
                                         chaveAcesso: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-                                        idUsuario: 69
                     description: 'Resposta do LOGIN efetuado com sucesso. '
                 '400':
                     content:
