@@ -1,0 +1,616 @@
+openapi: 3.0.2
+info:
+    title: Todos Restaurantes
+    version: 1.0.0
+    description: 'Sistema "Todos Restaurantes". '
+paths:
+    /usuario:
+        summary: Usuário do sistema "TodosRestaurantes"
+        description: Manutenção de usuários no sistema "TodosRestaurantes".
+        get:
+            tags:
+                - Cadastro_Usuário
+            parameters:
+                -
+                    name: nome
+                    description: Argumento para busca de usuários por nome.
+                    schema:
+                        type: string
+                    in: query
+                    required: true
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseBuscaUsuarios'
+                            examples:
+                                Lista de usuários:
+                                    value:
+                                        usuarios:
+                                            -
+                                                nome: some text
+                                                endereco:
+                                                    tipoLogradouro: ALAMEDA
+                                                    nomeLogradouro: some text
+                                                    numero: some text
+                                                    bairro: some text
+                                                    cepCompleto: some text
+                                                    cidade: some text
+                                                    uf: MA
+                                                ultimaManutencao: '2018-02-10T09:30Z'
+                                                tipoUsuario: CLIENTE_RESTAURANTE
+                                                email: some text
+                                            -
+                                                nome: some text
+                                                endereco:
+                                                    tipoLogradouro: ALAMEDA
+                                                    nomeLogradouro: some text
+                                                    numero: some text
+                                                    bairro: some text
+                                                    cepCompleto: some text
+                                                    cidade: some text
+                                                    uf: MT
+                                                ultimaManutencao: '2018-02-10T09:30Z'
+                                                tipoUsuario: CLIENTE_RESTAURANTE
+                                                email: some text
+                    description: Lista de usuários do perfil "CLIENTE" que atendem ao argumento de busca.
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                            examples:
+                                Não há usuário cadastrado com o nome solicitado:
+                                    value:
+                                        mensagem: Não encontrado
+                                        status: 400
+                    description: 'Erro de negócio. '
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro técnico.
+            operationId: Buscar usuários
+            summary: Buscar usuário pelo nome
+            description: >-
+                Buscar usuários por nome. Função disponível somente para usuários logados com o perfil "DONO
+                RESTAURANTE". Busca apenas usuários do tipo "CLIENTE".
+        post:
+            requestBody:
+                description: >-
+                    Requisição para inclusão, alteração e exclusão de usuário no Cadastro de Usuários do
+                    sistema "TodosRestaurantes".
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RequestInclusaoUsuario'
+                        examples:
+                            Inclusão de CLIENTE:
+                                value:
+                                    nome: some text
+                                    endereco:
+                                        tipoLogradouro: RUA
+                                        nomeLogradouro: some text
+                                        numero: some text
+                                        bairro: some text
+                                        cepCompleto: some text
+                                        cidade: some text
+                                        uf: SP
+                                    tipoUsuario: CLIENTE_RESTAURANTE
+                                    login:
+                                        senha: teste123
+                                        email: endereco@email.com
+                            Inclusão de DONO DE RESTAURANTE:
+                                value:
+                                    nome: some text
+                                    endereco:
+                                        tipoLogradouro: TRAVESSA
+                                        nomeLogradouro: some text
+                                        numero: some text
+                                        bairro: some text
+                                        cepCompleto: some text
+                                        cidade: some text
+                                        uf: SP
+                                    tipoUsuario: DONO_RESTAURANTE
+                                    login:
+                                        senha: senha123
+                                        email: endereco@email.com.br
+                required: true
+            tags:
+                - Cadastro_Usuário
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseConsultaUsuario'
+                            examples:
+                                Cliente incluído com sucesso:
+                                    value:
+                                        nome: some text
+                                        endereco:
+                                            tipoLogradouro: RUA
+                                            nomeLogradouro: some text
+                                            numero: some text
+                                            bairro: some text
+                                            cepCompleto: some text
+                                            cidade: some text
+                                            uf: SE
+                                        ultimaManutencao: '2018-02-10T09:30Z'
+                                        tipoUsuario: CLIENTE_RESTAURANTE
+                                        email: endereco@email.com
+                                Dono de restaurante incluído com sucesso:
+                                    value:
+                                        nome: some text
+                                        endereco:
+                                            tipoLogradouro: ALAMEDA
+                                            nomeLogradouro: some text
+                                            numero: some text
+                                            bairro: some text
+                                            cepCompleto: some text
+                                            cidade: some text
+                                            uf: PI
+                                        ultimaManutencao: '2018-02-10T09:30Z'
+                                        tipoUsuario: DONO_RESTAURANTE
+                                        email: endereco@email.com.br
+                    description: 'Usuário incluído com sucesso. '
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                            examples:
+                                Não é possível incluir o usuário:
+                                    value:
+                                        mensagem: Não é possível incluir o usuário
+                                        status: 400
+                    description: Erro de negócio.
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                            examples:
+                                Sistema Indisponível:
+                                    value:
+                                        mensagem: Sistema Indisponível
+                                        status: 500
+                    description: 'Erro técnico no sistema. '
+            operationId: INCLUIR
+            summary: Inclusão de usuário
+            description: Cadsatramento de usuário no sistema "TodosRestaurantes".
+        parameters:
+            -
+                name: x-version
+                description: 'Versão da API. '
+                schema:
+                    type: integer
+                in: header
+                required: true
+    /login:
+        summary: Autenticação do usuário do sistema "TodosRestaurante"
+        description: >-
+            LOGIN do usuário do sistema "TodosRestaurante". Esse endpoint valida usuário e senha, retornando
+            TOKEN JWT e tipo de usuário. 
+        post:
+            requestBody:
+                description: Requisição para LOGIN no sistema "TodosRestaurantes".
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RequestDoLogin'
+                        examples:
+                            Solicitação de LOGIN:
+                                value:
+                                    login:
+                                        email: endereco@email.com.br
+                                        senha: teste1234
+                required: true
+            tags:
+                - Usuário
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseDoLogin'
+                            examples:
+                                Login efetuado com sucesso:
+                                    value:
+                                        expiraEm: 3600
+                                        chaveAcesso: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                                        idUsuario: 69
+                    description: 'Resposta do LOGIN efetuado com sucesso. '
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                            examples:
+                                Login incorreto:
+                                    value:
+                                        mensagem: usuário/senha inválidos
+                                        status: 400
+                    description: 'Erro de negócio no processamento do LOGIN. '
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                            examples:
+                                Sistema Indisponível:
+                                    value:
+                                        mensagem: Sistema Indisponível
+                                        status: 500
+                    description: 'Erro de sistema. '
+            operationId: ENTRAR
+            summary: Login no sistema "TodosRestaurantes"
+            description: Requisição para LOGIN no sistema "TodosRestaurantes".
+        parameters:
+            -
+                name: x-version
+                description: 'Versão da API. '
+                schema:
+                    type: number
+                in: header
+                required: true
+    /usuario/me:
+        get:
+            tags:
+                - Cadastro_Usuário
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseConsultaUsuario'
+                            examples:
+                                Usuário logado é Cliente:
+                                    value:
+                                        nome: some text
+                                        endereco:
+                                            tipoLogradouro: TRAVESSA
+                                            nomeLogradouro: some text
+                                            numero: some text
+                                            bairro: some text
+                                            cepCompleto: some text
+                                            cidade: some text
+                                            uf: GO
+                                        ultimaManutencao: '2018-02-10T09:30Z'
+                                        tipoUsuario: CLIENTE_RESTAURANTE
+                                        email: some text
+                                Usuário logado é Dono de Restaurante:
+                                    value:
+                                        nome: some text
+                                        endereco:
+                                            tipoLogradouro: RUA
+                                            nomeLogradouro: some text
+                                            numero: some text
+                                            bairro: some text
+                                            cepCompleto: some text
+                                            cidade: some text
+                                            uf: PE
+                                        ultimaManutencao: '2018-02-10T09:30Z'
+                                        tipoUsuario: DONO_RESTAURANTE
+                                        email: some text
+                    description: 'Consulta de dados do usuário logado efetuada com sucesso. '
+            operationId: CONSULTAR
+            summary: Consultar dados do usuário logado.
+            description: 'Consultar dados do usuário logado. '
+        delete:
+            tags:
+                - Cadastro_Usuário
+            responses:
+                '204':
+                    description: 'Exclusão do usuário efetuada com sucesso. '
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro de negócio.
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: 'Erro técnico. '
+            operationId: EXCLUIR
+            summary: Exclusão do usuário logado
+            description: 'Solicia exclusão do usuário logado. '
+        parameters:
+            -
+                name: x-version
+                description: Versão da API.
+                schema:
+                    type: integer
+                in: header
+                required: true
+    /usuario/me/senha:
+        put:
+            requestBody:
+                description: 'Requisição para alteração da senha do usuário logado no sistema. '
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RequestAlteracaoSenha'
+                        examples:
+                            Troca de senha:
+                                value:
+                                    loginAtual:
+                                        senha: teste123
+                                        email: endereco@email.com
+                                    novaSenha: teste124
+                required: true
+            tags:
+                - Cadastro_Usuário
+            responses:
+                '204':
+                    description: 'Troca de senha efetuada com sucesso. '
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro de negócio.
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: 'Erro técnico. '
+            operationId: TROCAR_SENHA
+            summary: Alteração da senha do usuário
+            description: Alteração da senha do usuário logado no sistema "TodosRestaurante".
+        parameters:
+            -
+                name: x-version
+                description: Versão da API.
+                schema:
+                    type: integer
+                in: header
+                required: true
+components:
+    schemas:
+        RequestDoLogin:
+            description: Requisição para LOGIN no sistema "TodosRestaurantes".
+            required:
+                - login
+            type: object
+            properties:
+                login:
+                    $ref: '#/components/schemas/loginUsuario'
+                    description: 'Dados para autenticação do usuário. '
+        endereco:
+            description: Endereço do usuário do sistema "TodosRestaurantes". O endereço precisa ser no Brasi.
+            required:
+                - tipoLogradouro
+                - nomeLogradouro
+                - numero
+                - uf
+            type: object
+            properties:
+                tipoLogradouro:
+                    description: 'Tipo do logradouro do endereço do cliente. '
+                    enum:
+                        - RUA
+                        - AVENIDA
+                        - ALAMEDA
+                        - TRAVESSA
+                    type: string
+                nomeLogradouro:
+                    description: 'Nome da Rua, Avenida ou Alameda.'
+                    type: string
+                numero:
+                    description: 'Número que identifica o imóvel do endereço do usuário. '
+                    type: string
+                bairro:
+                    description: 'Bairro do endereço. '
+                    type: string
+                cepCompleto:
+                    description: 'CEP completo do endereço no formato: 00000-000.'
+                    type: string
+                cidade:
+                    description: 'Cidade do endereço. '
+                    type: string
+                uf:
+                    description: 'UF do Estado do endereço. '
+                    enum:
+                        - AC
+                        - AL
+                        - AM
+                        - AP
+                        - BA
+                        - CE
+                        - DF
+                        - ES
+                        - GO
+                        - MA
+                        - MG
+                        - MS
+                        - MT
+                        - PA
+                        - PB
+                        - PE
+                        - PI
+                        - PR
+                        - RJ
+                        - RN
+                        - RO
+                        - RR
+                        - RS
+                        - SC
+                        - SE
+                        - SP
+                        - TO
+                    type: string
+        loginUsuario:
+            description: 'Dados de LOGIN do usuário do sistema. '
+            required:
+                - email
+                - senha
+            type: object
+            properties:
+                senha:
+                    description: Senha para acesso ao sistema "TodosRestaurantes".
+                    type: string
+                email:
+                    description: >-
+                        Endereço de e-mail para validação e comunicação do usuário e para identificá-lo no
+                        momento do LOGIN.
+                    type: string
+        ResponseDoLogin:
+            description: 'Resposta do LOGIN efetuado com sucesso. '
+            required:
+                - chaveAcesso
+                - expiraEm
+            type: object
+            properties:
+                expiraEm:
+                    description: 'Tempo para expiração do Token JWT, em segundos.'
+                    type: integer
+                chaveAcesso:
+                    description: Token JWT para acesso ao sistema "TodosRestaurantes".
+                    type: string
+        ResponseErro:
+            description: 'Resposta de erro. '
+            required:
+                - mensagem
+                - status
+            type: object
+            properties:
+                mensagem:
+                    description: 'Mensagem de erro de negócio. '
+                    type: string
+                status:
+                    description: 'Código http retornado como status da resposta. '
+                    type: integer
+        usuarioObjeto:
+            description: |-
+                Usuário do sistema "TodosRestaurantes". Temos dois tipos de usuários:
+                - Dono do Restaurante;
+                - Cliente do Restuarante.
+            required:
+                - tipoUsuario
+                - login
+                - ultimaManutencao
+            type: object
+            properties:
+                nome:
+                    description: Nome do usuário.
+                    type: string
+                endereco:
+                    $ref: '#/components/schemas/endereco'
+                    description: 'Endereço do usuário. '
+                tipoUsuario:
+                    description: |-
+                        Indica o tipo de usuário:
+                        - Dono de restaurante;
+                        - Cliente de restaurante.
+                    enum:
+                        - CLIENTE_RESTAURANTE
+                        - DONO_RESTAURANTE
+                    type: string
+                login:
+                    $ref: '#/components/schemas/loginUsuario'
+                    description: Dados de LOGIN do usuário no sistema "TodosRestaurantes".
+                ultimaManutencao:
+                    format: date-time
+                    description: Momento da última manutenção dos dados do usuário do sistema "TodosRestaurantes".
+                    type: string
+        RequestInclusaoUsuario:
+            description: Requisição para inclusão de usuário no sistema "TodosRestaurantes".
+            required:
+                - tipoUsuario
+                - login
+            type: object
+            properties:
+                nome:
+                    description: Nome do usuário.
+                    type: string
+                endereco:
+                    $ref: '#/components/schemas/endereco'
+                    description: 'Endereço do usuário. '
+                tipoUsuario:
+                    description: |-
+                        Indica o tipo de usuário:
+                        - Dono de restaurante;
+                        - Cliente de restaurante.
+                    enum:
+                        - CLIENTE_RESTAURANTE
+                        - DONO_RESTAURANTE
+                    type: string
+                login:
+                    $ref: '#/components/schemas/loginUsuario'
+                    description: Dados de LOGIN do usuário no sistema "TodosRestaurantes".
+        RequestManutencaoUsuario:
+            description: Solicitação de alteração dos dados do usuário do sistema "TodosRestaurantes".
+            required:
+                - email
+            type: object
+            properties:
+                nome:
+                    description: Nome do usuário.
+                    type: string
+                endereco:
+                    $ref: '#/components/schemas/endereco'
+                    description: 'Endereço do usuário. '
+                email:
+                    description: Endereço de e-mail que identifica o usuário no sistema "TodosRestaurantes".
+                    type: string
+        RequestAlteracaoSenha:
+            description: Requisição para alteração da senha do usuário do sistema "TodosRestaurantes".
+            required:
+                - loginAtual
+                - novaSenha
+            type: object
+            properties:
+                loginAtual:
+                    $ref: '#/components/schemas/loginUsuario'
+                    description: 'Informações do LOGIN atual. '
+                novaSenha:
+                    description: 'Nova senha a ser atribuída ao usuário. '
+                    type: string
+        ResponseConsultaUsuario:
+            description: Resposta da inclusão com sucesso de usuário no sistema "TodosRestaurantes".
+            required:
+                - ultimaManutencao
+                - tipoUsuario
+                - email
+            type: object
+            properties:
+                nome:
+                    description: Nome do usuário.
+                    type: string
+                endereco:
+                    $ref: '#/components/schemas/endereco'
+                    description: 'Endereço do usuário. '
+                ultimaManutencao:
+                    format: date-time
+                    description: 'Data da última manutenção dos dados do usuário. '
+                    type: string
+                tipoUsuario:
+                    description: |-
+                        Indica o tipo de usuário:
+                        - Dono de restaurante;
+                        - Cliente de restaurante.
+                    enum:
+                        - CLIENTE_RESTAURANTE
+                        - DONO_RESTAURANTE
+                    type: string
+                email:
+                    description: Endereço de e-mail que identifica o usuário no sistema "TodosRestaurantes".
+                    type: string
+        ResponseBuscaUsuarios:
+            description: Resposta da busca de usuários por nome.
+            required:
+                - usuarios
+            type: object
+            properties:
+                usuarios:
+                    description: Lista de usuários.
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ResponseConsultaUsuario'
