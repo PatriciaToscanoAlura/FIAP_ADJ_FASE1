@@ -298,6 +298,92 @@ paths:
             operationId: CONSULTAR
             summary: Consultar dados do usuário logado.
             description: 'Consultar dados do usuário logado. '
+        put:
+            requestBody:
+                description: Requisição de alteração dos dados do usuário.
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RequestAlteracaoUsuario'
+                        examples:
+                            Alterar dados do Cliente:
+                                value:
+                                    nome: some text
+                                    endereco:
+                                        tipoLogradouro: TRAVESSA
+                                        nomeLogradouro: some text
+                                        numero: some text
+                                        bairro: some text
+                                        cepCompleto: some text
+                                        cidade: some text
+                                        uf: GO
+                                    email: some text
+                            Alterar dados do Dono do Restaurante:
+                                value:
+                                    nome: some text
+                                    endereco:
+                                        tipoLogradouro: AVENIDA
+                                        nomeLogradouro: some text
+                                        numero: some text
+                                        bairro: some text
+                                        cepCompleto: some text
+                                        cidade: some text
+                                        uf: ES
+                                    email: some text
+                required: true
+            tags:
+                - Cadastro_Usuário
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseConsultaUsuario'
+                            examples:
+                                Alteração de dados do Cliente:
+                                    value:
+                                        nome: some text
+                                        endereco:
+                                            tipoLogradouro: ALAMEDA
+                                            nomeLogradouro: some text
+                                            numero: some text
+                                            bairro: some text
+                                            cepCompleto: some text
+                                            cidade: some text
+                                            uf: MG
+                                        ultimaManutencao: '2018-02-10T09:30Z'
+                                        tipoUsuario: CLIENTE_RESTAURANTE
+                                        email: some text
+                                Alteração de dados do Dono do restaurante:
+                                    value:
+                                        nome: some text
+                                        endereco:
+                                            tipoLogradouro: RUA
+                                            nomeLogradouro: some text
+                                            numero: some text
+                                            bairro: some text
+                                            cepCompleto: some text
+                                            cidade: some text
+                                            uf: ES
+                                        ultimaManutencao: '2018-02-10T09:30Z'
+                                        tipoUsuario: DONO_RESTAURANTE
+                                        email: some text
+                    description: Dados do usuário alterados com sucesso.
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro de negócio
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro técnico.
+            operationId: ALTERAR
+            summary: Alterar dados do usuário
+            description: Alteração de dados do usuário logado no sistema "TodosRestaurantes".
         delete:
             tags:
                 - Cadastro_Usuário
@@ -544,21 +630,6 @@ components:
                 login:
                     $ref: '#/components/schemas/loginUsuario'
                     description: Dados de LOGIN do usuário no sistema "TodosRestaurantes".
-        RequestManutencaoUsuario:
-            description: Solicitação de alteração dos dados do usuário do sistema "TodosRestaurantes".
-            required:
-                - email
-            type: object
-            properties:
-                nome:
-                    description: Nome do usuário.
-                    type: string
-                endereco:
-                    $ref: '#/components/schemas/endereco'
-                    description: 'Endereço do usuário. '
-                email:
-                    description: Endereço de e-mail que identifica o usuário no sistema "TodosRestaurantes".
-                    type: string
         RequestAlteracaoSenha:
             description: Requisição para alteração da senha do usuário do sistema "TodosRestaurantes".
             required:
@@ -613,3 +684,18 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/ResponseConsultaUsuario'
+        RequestAlteracaoUsuario:
+            description: Solicitação de alteração dos dados do usuário do sistema "TodosRestaurantes".
+            required:
+                - email
+            type: object
+            properties:
+                nome:
+                    description: Nome do usuário.
+                    type: string
+                endereco:
+                    $ref: '#/components/schemas/endereco'
+                    description: 'Endereço do usuário. '
+                email:
+                    description: Endereço de e-mail que identifica o usuário no sistema "TodosRestaurantes".
+                    type: string
