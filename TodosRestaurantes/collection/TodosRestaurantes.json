@@ -1,0 +1,409 @@
+{
+  "info": {
+    "name": "TodosRestaurantes",
+    "description": null,
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Inclui usuário - Cliente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Outro Clinte\",\n  \"endereco\": {\n    \"tipoLogradouro\": \"AVENIDA\",\n    \"nomeLogradouro\": \"Avenida das Desventuras\",\n    \"numero\": \"99\",\n    \"bairro\": \"Bairro do Outro\",\n    \"cepCompleto\": \"99999-123\",\n    \"cidade\": \"Cidade Alegre\",\n    \"uf\": \"SP\"\n  },\n  \"tipoUsuario\": \"CLIENTE_RESTAURANTE\",\n  \"login\": {\n    \"senha\": \"senhaAlegre\",\n    \"email\": \"enderecoC@email.com\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Inclui usuário - Dono de Restaurante",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Outro usuário\",\n  \"endereco\": {\n    \"tipoLogradouro\": \"TRAVESSA\",\n    \"nomeLogradouro\": \"Travessa do Lado\",\n    \"numero\": \"s/n\",\n    \"bairro\": \"Bairro do Outro\",\n    \"cepCompleto\": \"99999-123\",\n    \"cidade\": \"Cidade do Outro\",\n    \"uf\": \"BA\"\n  },\n  \"tipoUsuario\": \"DONO_RESTAURANTE\",\n  \"login\": {\n    \"senha\": \"senhaDele\",\n    \"email\": \"endereco1@email.com\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/login",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "login"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"login\": {\n    \"senha\": \"senhaDele\",\n    \"email\": \"endereco1@email.com\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    const tokenGerado = pm.response.json().chaveAcesso; ",
+              "    pm.environment.set(\"token\", tokenGerado);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Busca clientes por nome",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario?nome=Cli",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario"
+          ],
+          "query": [
+            {
+              "key": "nome",
+              "value": "Cli"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Consulta dados do usuário logado",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario/me",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario",
+            "me"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Deleta usuário logado",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario/me",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario",
+            "me"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Troca senha",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario/me/senha",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario",
+            "me",
+            "senha"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"loginAtual\": {\n    \"senha\": \"senhaDono\",\n    \"email\": \"endereco2@email.com\"\n  },\n  \"novaSenha\": \"testeTroca\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Altera dados do usuário logado - exceto e-mail",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario/me",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario",
+            "me"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "  {\n     \"nome\": \"Teste2\",\n     \"endereco\": {\n       \"tipoLogradouro\": \"RUA                 \",\n       \"nomeLogradouro\": \"Rua de Teste\",\n       \"numero\": \"1234                \",\n       \"bairro\": \"Meu Bairro\",\n       \"cepCompleto\": \"         \",\n       \"cidade\": \"Minha Cidade                            \",\n       \"uf\": \"BA\"\n  },\n      \"email\": \"endereco1@email.com\"\n  }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Altera dados do usuário logado - inclusive e-mail",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-version",
+            "value": "1",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8080/usuario/me",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "usuario",
+            "me"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "  {\n     \"nome\": \"Teste2\",\n     \"endereco\": {\n       \"tipoLogradouro\": \"RUA                 \",\n       \"nomeLogradouro\": \"Rua de Teste\",\n       \"numero\": \"1234                \",\n       \"bairro\": \"Meu Bairro Alterado\",\n       \"cepCompleto\": \"         \",\n       \"cidade\": \"Minha Cidade                            \",\n       \"uf\": \"BA\"\n  },\n      \"email\": \"endereco3@email.com\"\n  }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
