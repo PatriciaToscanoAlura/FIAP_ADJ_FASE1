@@ -121,40 +121,7 @@ paths:
             tags:
                 - Cadastro_Usuário
             responses:
-                '200':
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ResponseConsultaUsuario'
-                            examples:
-                                Cliente incluído com sucesso:
-                                    value:
-                                        nome: some text
-                                        endereco:
-                                            tipoLogradouro: RUA
-                                            nomeLogradouro: some text
-                                            numero: some text
-                                            bairro: some text
-                                            cepCompleto: some text
-                                            cidade: some text
-                                            uf: SE
-                                        ultimaManutencao: '2018-02-10T09:30Z'
-                                        tipoUsuario: CLIENTE_RESTAURANTE
-                                        email: endereco@email.com
-                                Dono de restaurante incluído com sucesso:
-                                    value:
-                                        nome: some text
-                                        endereco:
-                                            tipoLogradouro: ALAMEDA
-                                            nomeLogradouro: some text
-                                            numero: some text
-                                            bairro: some text
-                                            cepCompleto: some text
-                                            cidade: some text
-                                            uf: PI
-                                        ultimaManutencao: '2018-02-10T09:30Z'
-                                        tipoUsuario: DONO_RESTAURANTE
-                                        email: endereco@email.com.br
+                '201':
                     description: 'Usuário incluído com sucesso. '
                 '400':
                     content:
@@ -220,19 +187,22 @@ paths:
                                 Login efetuado com sucesso:
                                     value:
                                         expiraEm: 3600
-                                        chaveAcesso: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                                        chaveAcesso: >-
+                                            eyJhbGciOiJIUzM4NCJ9.eyJ1bHRpbWFBdHVhbGl6YWNhbyI6MTc4OTkyOTMxNDg1OSwiaWQiOjEsInN1YiI6ImVuZGVyZWNvMUBlbWFpbC5jb20iLCJpYXQiOjE3ODk5MzYyMjIsImV4cCI6MTc4OTkzNjIyMn0.sr4fql7mP4G6od_NANoUv0yIq0Fs7AzcTsOuu7g_j5BxX9dQfnnS-wSbDunvT251
+                                        idUsuario: 47
+                                        tipoUsuario: CLIENTE_RESTAURANTE
                     description: 'Resposta do LOGIN efetuado com sucesso. '
-                '400':
+                '401':
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ResponseErro'
                             examples:
-                                Login incorreto:
+                                Dados do Login incorretos:
                                     value:
-                                        mensagem: usuário/senha inválidos
-                                        status: 400
-                    description: 'Erro de negócio no processamento do LOGIN. '
+                                        mensagem: Login incorreto
+                                        status: 401
+                    description: 'Dados do LOGIN não estão corretos. '
                 '500':
                     content:
                         application/json:
@@ -278,7 +248,6 @@ paths:
                                             cidade: some text
                                             uf: GO
                                         ultimaManutencao: '2018-02-10T09:30Z'
-                                        tipoUsuario: CLIENTE_RESTAURANTE
                                         email: some text
                                 Usuário logado é Dono de Restaurante:
                                     value:
@@ -292,9 +261,20 @@ paths:
                                             cidade: some text
                                             uf: PE
                                         ultimaManutencao: '2018-02-10T09:30Z'
-                                        tipoUsuario: DONO_RESTAURANTE
                                         email: some text
                     description: 'Consulta de dados do usuário logado efetuada com sucesso. '
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro de negócio.
+                '500':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseErro'
+                    description: Erro técnico no sistema.
             operationId: CONSULTAR
             summary: Consultar dados do usuário logado.
             description: 'Consultar dados do usuário logado. '
@@ -551,6 +531,8 @@ components:
             required:
                 - chaveAcesso
                 - expiraEm
+                - idUsuario
+                - tipoUsuario
             type: object
             properties:
                 expiraEm:
@@ -558,6 +540,16 @@ components:
                     type: integer
                 chaveAcesso:
                     description: Token JWT para acesso ao sistema "TodosRestaurantes".
+                    type: string
+                idUsuario:
+                    format: int64
+                    description: Identificação do usuário.
+                    type: integer
+                tipoUsuario:
+                    description: 'Informa o tipo de usuário: CLIENTE_RESTAURANTE ou DONO_RESTAURANTE.'
+                    enum:
+                        - CLIENTE_RESTAURANTE
+                        - DONO_RESTAURANTE
                     type: string
         ResponseErro:
             description: 'Resposta de erro. '
@@ -647,7 +639,6 @@ components:
             description: Resposta da inclusão com sucesso de usuário no sistema "TodosRestaurantes".
             required:
                 - ultimaManutencao
-                - tipoUsuario
                 - email
             type: object
             properties:
@@ -660,15 +651,6 @@ components:
                 ultimaManutencao:
                     format: date-time
                     description: 'Data da última manutenção dos dados do usuário. '
-                    type: string
-                tipoUsuario:
-                    description: |-
-                        Indica o tipo de usuário:
-                        - Dono de restaurante;
-                        - Cliente de restaurante.
-                    enum:
-                        - CLIENTE_RESTAURANTE
-                        - DONO_RESTAURANTE
                     type: string
                 email:
                     description: Endereço de e-mail que identifica o usuário no sistema "TodosRestaurantes".
